@@ -13,7 +13,7 @@
         <div class="timer-container">
             <div class="timer" id="stopwatch">
                 <h2>Stopwatch</h2>
-                <div id="stopwatch-display">00:00</div>
+                <div id="stopwatch-display">00:00:00</div>
                 <button onclick="startStopwatch()">Start</button>
                 <button onclick="stopStopwatch()">Stop</button>
                 <button onclick="resetStopwatch()">Reset</button>
@@ -44,6 +44,31 @@
                 <input type="number" id="set-seconds" placeholder="Seconds" min="0" max="59">
             </div>
             <button onclick="addTimer()">Add</button>
+        </div>
+    </div>
+
+    <div id="edit-timer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditTimerModal()">&times;</span>
+            <h2>Edit Timer</h2>
+            <input type="hidden" id="edit-timer-id">
+            <input type="text" id="edit-timer-name" placeholder="Timer Name">
+            <div>
+                <label for="edit-timer-type">Timer Type:</label>
+                <select id="edit-timer-type" onchange="toggleEditTimerInputs()">
+                    <option value="until">Time Until</option>
+                    <option value="set">Set Time</option>
+                </select>
+            </div>
+            <div id="edit-until-input" class="timer-input">
+                <input type="time" id="edit-timer-time" step="1">
+            </div>
+            <div id="edit-set-input" class="timer-input" style="display:none;">
+                <input type="number" id="edit-set-hours" placeholder="Hours" min="0">
+                <input type="number" id="edit-set-minutes" placeholder="Minutes" min="0" max="59">
+                <input type="number" id="edit-set-seconds" placeholder="Seconds" min="0" max="59">
+            </div>
+            <button onclick="updateTimer()">Save</button>
         </div>
     </div>
 
