@@ -173,6 +173,35 @@ function updateTimer() {
     closeEditTimerModal();
 }
 
+function addPresetTimer(name, timeStr) {
+    const targetTime = new Date();
+    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+    targetTime.setHours(hours);
+    targetTime.setMinutes(minutes);
+    targetTime.setSeconds(seconds);
+
+    const displayTarget = formatFullTime(targetTime);
+    const extraTimers = document.getElementById('extra-timers');
+    const newTimer = document.createElement('div');
+    newTimer.className = 'timer';
+    newTimer.id = `timer-${Date.now()}`;
+    newTimer.dataset.type = 'until';
+    newTimer.dataset.targetTime = targetTime.toISOString();
+
+    const timerId = newTimer.id;
+    newTimer.innerHTML = `
+        <h2>${name}</h2>
+        <div>Target Time: ${displayTarget}</div>
+        <div id="${timerId}-display">00:00:00</div>
+        <button onclick="stopExtraTimer('${timerId}')">Stop</button>
+        <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+        <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+    `;
+    extraTimers.appendChild(newTimer);
+
+    startExtraTimer(timerId, targetTime.toISOString());
+}
+
 function startExtraTimer(timerId, targetTimeStr) {
     const targetTime = new Date(targetTimeStr);
     const display = document.getElementById(`${timerId}-display`);
