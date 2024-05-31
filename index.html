@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Timer App</h1>
+        <div id="current-time">Current Time: 00:00:00 am</div>
+        <div class="timer-container">
+            <div class="timer" id="stopwatch">
+                <h2>Stopwatch</h2>
+                <div id="stopwatch-display">00:00</div>
+                <button onclick="startStopwatch()">Start</button>
+                <button onclick="stopStopwatch()">Stop</button>
+                <button onclick="resetStopwatch()">Reset</button>
+            </div>
+        </div>
+        <button id="add-timer" onclick="showAddTimerModal()">Add Timer</button>
+        <div id="extra-timers" class="center-timers"></div>
+    </div>
+
+    <div id="add-timer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddTimerModal()">&times;</span>
+            <h2>Add Timer</h2>
+            <input type="text" id="timer-name" placeholder="Timer Name">
+            <div>
+                <label for="timer-type">Timer Type:</label>
+                <select id="timer-type" onchange="toggleTimerInputs()">
+                    <option value="until">Time Until</option>
+                    <option value="set">Set Time</option>
+                </select>
+            </div>
+            <div id="until-input" class="timer-input">
+                <input type="time" id="timer-time" step="1">
+            </div>
+            <div id="set-input" class="timer-input" style="display:none;">
+                <input type="number" id="set-hours" placeholder="Hours" min="0">
+                <input type="number" id="set-minutes" placeholder="Minutes" min="0" max="59">
+                <input type="number" id="set-seconds" placeholder="Seconds" min="0" max="59">
+            </div>
+            <button onclick="addTimer()">Add</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
