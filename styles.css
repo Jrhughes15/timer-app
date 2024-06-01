@@ -6,6 +6,8 @@ body {
     height: 100vh;
     background-color: #f0f0f0;
     margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 #app {
@@ -14,34 +16,62 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
+    width: 100%;
     max-width: 600px;
+    height: 100vh; /* Ensure the app takes full height */
+    overflow-y: auto; /* Allow vertical scrolling */
+    box-sizing: border-box;
+}
+
+h1, h2 {
+    margin: 10px 0;
+    text-align: center;
 }
 
 #current-time {
-    font-size: 1.2em;
+    font-size: 1.5em; /* Increased font size for better visibility */
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .timer-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-bottom: 20px;
 }
 
 .timer {
     width: 100%;
     margin: 10px auto;
+    text-align: center; /* Center text for better readability */
 }
 
-#stopwatch button, #add-timer, .timer button, #preset-buttons button {
+.button-container, #preset-buttons, .button-grid, .timer .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.button-container button, #preset-buttons button, .button-grid button, .timer .button-container button, .full-width {
     font-size: 1.2em;
     padding: 10px;
-    margin-top: 10px;
-    width: 100%;
+    margin: 5px;
+    flex: 1 0 45%;
+    box-sizing: border-box;
 }
 
-#add-timer, #preset-buttons {
+.full-width {
+    width: calc(100% - 20px);
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Changed to 4 columns */
+    gap: 10px;
+}
+
+#add-timer {
     margin-top: 20px;
 }
 
@@ -49,6 +79,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .center-timers {
@@ -56,6 +87,11 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
+}
+
+.timer-display, .timer h2, .timer div {
+    font-size: 1.5em; /* Consistent font size for better visibility */
+    text-align: center;
 }
 
 /* Modal styling */
@@ -96,11 +132,12 @@ body {
     cursor: pointer;
 }
 
-input[type="time"], input[type="text"], input[type="number"] {
+input[type="time"], input[type="text"], input[type="number"], select {
     font-size: 1.2em;
     margin-bottom: 10px;
     padding: 5px;
     width: calc(100% - 20px);
+    box-sizing: border-box;
 }
 
 .timer-input {
