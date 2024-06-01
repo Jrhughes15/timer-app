@@ -95,11 +95,7 @@ function addTimer() {
 
     if (timerType === 'until') {
         const time = document.getElementById('timer-time').value;
-        targetTime = new Date();
-        const [hours, minutes, seconds] = time.split(':').map(Number);
-        targetTime.setHours(hours);
-        targetTime.setMinutes(minutes);
-        targetTime.setSeconds(seconds);
+        targetTime = getNextTargetTime(time);
         displayTarget = formatFullTime(targetTime);
     } else if (timerType === 'set') {
         const hours = parseInt(document.getElementById('set-hours').value) || 0;
@@ -124,10 +120,12 @@ function addTimer() {
     newTimer.innerHTML = `
         <h2>${name || 'Extra Timer'}</h2>
         <div>Target Time: ${displayTarget}</div>
-        <div id="${timerId}-display">00:00:00</div>
-        <button onclick="stopExtraTimer('${timerId}')">Stop</button>
-        <button onclick="clearExtraTimer('${timerId}')">Clear</button>
-        <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+        <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        <div class="button-container">
+            <button onclick="stopExtraTimer('${timerId}')">Stop</button>
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+        </div>
     `;
     extraTimers.appendChild(newTimer);
 
@@ -144,11 +142,7 @@ function updateTimer() {
 
     if (timerType === 'until') {
         const time = document.getElementById('edit-timer-time').value;
-        targetTime = new Date();
-        const [hours, minutes, seconds] = time.split(':').map(Number);
-        targetTime.setHours(hours);
-        targetTime.setMinutes(minutes);
-        targetTime.setSeconds(seconds);
+        targetTime = getNextTargetTime(time);
         displayTarget = formatFullTime(targetTime);
     } else if (timerType === 'set') {
         const hours = parseInt(document.getElementById('edit-set-hours').value) || 0;
@@ -174,13 +168,9 @@ function updateTimer() {
 }
 
 function addPresetTimer(name, timeStr) {
-    const targetTime = new Date();
-    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-    targetTime.setHours(hours);
-    targetTime.setMinutes(minutes);
-    targetTime.setSeconds(seconds);
-
+    const targetTime = getNextTargetTime(timeStr);
     const displayTarget = formatFullTime(targetTime);
+
     const extraTimers = document.getElementById('extra-timers');
     const newTimer = document.createElement('div');
     newTimer.className = 'timer';
@@ -192,14 +182,29 @@ function addPresetTimer(name, timeStr) {
     newTimer.innerHTML = `
         <h2>${name}</h2>
         <div>Target Time: ${displayTarget}</div>
-        <div id="${timerId}-display">00:00:00</div>
-        <button onclick="stopExtraTimer('${timerId}')">Stop</button>
-        <button onclick="clearExtraTimer('${timerId}')">Clear</button>
-        <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+        <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        <div class="button-container">
+            <button onclick="stopExtraTimer('${timerId}')">Stop</button>
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+        </div>
     `;
     extraTimers.appendChild(newTimer);
 
     startExtraTimer(timerId, targetTime.toISOString());
+}
+
+function getNextTargetTime(timeStr) {
+    const now = new Date();
+    const targetTime = new Date(now);
+    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+    targetTime.setHours(hours, minutes, seconds, 0);
+
+    if (targetTime <= now) {
+        targetTime.setDate(targetTime.getDate() + 1);
+    }
+
+    return targetTime;
 }
 
 function startExtraTimer(timerId, targetTimeStr) {
