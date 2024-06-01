@@ -3,29 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timer App</title>
+    <title>Time Manager</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="app">
-        <h1>Timer App</h1>
+        <h1>Time Manager</h1>
         <div id="current-time">Current Time: 00:00:00 am</div>
         <div class="timer-container">
             <div class="timer" id="stopwatch">
                 <h2>Stopwatch</h2>
-                <div id="stopwatch-display">00:00:00</div>
-                <button onclick="startStopwatch()">Start</button>
-                <button onclick="stopStopwatch()">Stop</button>
-                <button onclick="resetStopwatch()">Reset</button>
+                <div id="stopwatch-display" class="timer-display">00:00:00</div>
+                <div class="button-container">
+                    <button onclick="startStopwatch()">Start</button>
+                    <button onclick="stopStopwatch()">Stop</button>
+                    <button onclick="resetStopwatch()">Reset</button>
+                </div>
             </div>
         </div>
-        <button id="add-timer" onclick="showAddTimerModal()">Add Timer</button>
-        <div id="preset-buttons">
+        <button id="add-timer" class="full-width" onclick="showAddTimerModal()">Add Timer</button>
+        
+        <h2>Weekday Shows</h2>
+        <div id="weekday-buttons" class="button-grid">
             <button onclick="addPresetTimer('4:30A Start', '04:30:00')">4:30A Start</button>
-            <button onclick="addPresetTimer('6:00A End', '06:59:40')">6:00A End</button>
+            <button onclick="addPresetTimer('6:00A End', '06:00:00')">6:00A End</button>
             <button onclick="addPresetTimer('GDSA Start', '09:00:00')">GDSA Start</button>
             <button onclick="addPresetTimer('GDSA End', '09:59:30')">GDSA End</button>
+            <button onclick="addPresetTimer('Noon Start', '12:00:00')">Noon Start</button>
+            <button onclick="addPresetTimer('Noon End', '12:29:30')">Noon End</button>
+            <button onclick="addPresetTimer('4:00P Start', '16:00:00')">4:00P Start</button>
+            <button onclick="addPresetTimer('4:30P End', '16:29:30')">4:00P End</button>
+            <button onclick="addPresetTimer('5:00P Start', '17:00:00')">5:00P Start</button>
+            <button onclick="addPresetTimer('5:30P End', '17:29:30')">5:00P End</button>
+            <button onclick="addPresetTimer('5:30P Start', '17:30:00')">5:30P Start</button>
+            <button onclick="addPresetTimer('5:59P End', '17:59:30')">5:30P End</button>
+            <button onclick="addPresetTimer('6:00P Start', '18:00:00')">6:00P Start</button>
+            <button onclick="addPresetTimer('6:30P End', '18:29:30')">6:30P End</button>
+            <button onclick="addPresetTimer('10:00P Start', '22:00:00')">10:00P Start</button>
+            <button onclick="addPresetTimer('10:30P End', '22:29:30')">10:00P End</button>
         </div>
+
+        <h2>Weekend Shows</h2>
+        <div id="weekend-buttons" class="button-grid">
+            <button onclick="addPresetTimer('7:00A Start', '07:00:00')">7:00A Start</button>
+            <button onclick="addPresetTimer('7:30A End', '07:29:30')">7:00A End</button>
+            <button onclick="addPresetTimer('8:00A Start', '08:00:00')">8:00A Start</button>
+            <button onclick="addPresetTimer('8:30A End', '08:29:30')">8:00A End</button>
+            <button onclick="addPresetTimer('5:00P Start', '17:00:00')">5:00P Start</button>
+            <button onclick="addPresetTimer('5:30P End', '17:29:30')">5:00P End</button>
+            <button onclick="addPresetTimer('5:30P Start', '17:30:00')">5:30P Start</button>
+            <button onclick="addPresetTimer('5:59P End', '17:59:30')">5:30P End</button>
+            <button onclick="addPresetTimer('6:00P Start', '18:00:00')">6:00P Start</button>
+            <button onclick="addPresetTimer('6:30P End', '18:29:30')">6:00P End</button>
+            <button onclick="addPresetTimer('10:00P Start', '22:00:00')">10:00P Start</button>
+            <button onclick="addPresetTimer('10:30P End', '22:29:30')">10:00P End</button>
+        </div>
+
         <div id="extra-timers" class="center-timers"></div>
     </div>
 
