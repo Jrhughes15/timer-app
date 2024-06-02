@@ -38,6 +38,16 @@ function formatFullTime(date) {
     return `${displayHours}:${minutes}:${seconds} ${ampm}`;
 }
 
+function formatFullDate(date) {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const day = days[date.getDay()];
+    const month = months[date.getMonth()];
+    const dayNum = date.getDate();
+    const year = date.getFullYear();
+    return `Date: ${day} - ${month} - ${date.getMonth() + 1}/${dayNum}/${year}`;
+}
+
 function showAddTimerModal() {
     document.getElementById('add-timer-modal').style.display = 'block';
 }
@@ -48,7 +58,7 @@ function closeAddTimerModal() {
 
 function showEditTimerModal(timerId) {
     const timer = document.getElementById(timerId);
-    const name = timer.querySelector('h2').innerText;
+    const name = timer.querySelector('.timer-title').innerText;
     const type = timer.dataset.type;
     const targetTime = timer.dataset.targetTime;
     const hours = timer.dataset.hours || 0;
@@ -108,7 +118,7 @@ function addTimer() {
 
     const extraTimers = document.getElementById('extra-timers');
     const newTimer = document.createElement('div');
-    newTimer.className = 'timer';
+    newTimer.className = 'timer-container-outer';
     newTimer.id = `timer-${Date.now()}`;
     newTimer.dataset.type = timerType;
     newTimer.dataset.targetTime = targetTime.toISOString();
@@ -118,11 +128,12 @@ function addTimer() {
 
     const timerId = newTimer.id;
     newTimer.innerHTML = `
-        <h2>${name || 'Extra Timer'}</h2>
-        <div>Target Time: ${displayTarget}</div>
-        <div id="${timerId}-display" class="timer-display">00:00:00</div>
-        <div class="button-container">
-            <button onclick="stopExtraTimer('${timerId}')">Stop</button>
+        <div class="timer-section timer-title">${name || 'Extra Timer'}</div>
+        <div class="timer-section timer-info">
+            <div>Target Time: ${displayTarget}</div>
+            <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        </div>
+        <div class="timer-section button-container-outer">
             <button onclick="clearExtraTimer('${timerId}')">Clear</button>
             <button onclick="showEditTimerModal('${timerId}')">Edit</button>
         </div>
@@ -160,8 +171,9 @@ function updateTimer() {
     timer.dataset.minutes = parseInt(document.getElementById('edit-set-minutes').value) || 0;
     timer.dataset.seconds = parseInt(document.getElementById('edit-set-seconds').value) || 0;
 
-    timer.querySelector('h2').innerText = name || 'Extra Timer';
-    timer.querySelector('div').innerText = `Target Time: ${displayTarget}`;
+    timer.querySelector('.timer-title').innerText = name || 'Extra Timer';
+    timer.querySelector('.timer-info div').innerText = `Target Time: ${displayTarget}`;
+    timer.querySelector('.timer-display').innerText = '00:00:00';
 
     startExtraTimer(timerId, targetTime.toISOString());
     closeEditTimerModal();
@@ -173,18 +185,24 @@ function addPresetTimer(name, timeStr) {
 
     const extraTimers = document.getElementById('extra-timers');
     const newTimer = document.createElement('div');
-    newTimer.className = 'timer';
+    newTimer.className = 'timer-container-outer';
     newTimer.id = `timer-${Date.now()}`;
     newTimer.dataset.type = 'until';
     newTimer.dataset.targetTime = targetTime.toISOString();
 
     const timerId = newTimer.id;
+
+    const formattedName = name.includes('Saturday') || name.includes('Sunday') 
+        ? name.replace(' ', '<br>') 
+        : name;
+
     newTimer.innerHTML = `
-        <h2>${name}</h2>
-        <div>Target Time: ${displayTarget}</div>
-        <div id="${timerId}-display" class="timer-display">00:00:00</div>
-        <div class="button-container">
-            <button onclick="stopExtraTimer('${timerId}')">Stop</button>
+        <div class="timer-section timer-title">${formattedName}</div>
+        <div class="timer-section timer-info">
+            <div>Target Time: ${displayTarget}</div>
+            <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        </div>
+        <div class="timer-section button-container-outer">
             <button onclick="clearExtraTimer('${timerId}')">Clear</button>
             <button onclick="showEditTimerModal('${timerId}')">Edit</button>
         </div>
@@ -227,19 +245,16 @@ function startExtraTimer(timerId, targetTimeStr) {
     }, 1000);
 }
 
-function stopExtraTimer(timerId) {
-    clearInterval(window[`${timerId}Interval`]);
-}
-
 function clearExtraTimer(timerId) {
-    const timerElement = document.getElementById(`${timerId}-display`).parentElement;
+    const timerElement = document.getElementById(timerId);
+    clearInterval(window[`${timerId}Interval`]);
     timerElement.remove();
-    stopExtraTimer(timerId);
 }
 
 function updateCurrentTime() {
     const now = new Date();
     document.getElementById('current-time').textContent = `Current Time: ${formatFullTime(now)}`;
+    document.getElementById('current-date').textContent = formatFullDate(now);
 }
 
 function updateDisplay(display, seconds) {
