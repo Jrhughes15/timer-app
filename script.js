@@ -45,7 +45,7 @@ function formatFullDate(date) {
     const month = months[date.getMonth()];
     const dayNum = date.getDate();
     const year = date.getFullYear();
-    return `Date: ${day} - ${month} - ${date.getMonth() + 1}/${dayNum}/${year}`;
+    return `${day} - ${month} - ${date.getMonth() + 1}/${dayNum}/${year}`;
 }
 
 function showAddTimerModal() {
@@ -105,7 +105,9 @@ function addTimer() {
 
     if (timerType === 'until') {
         const time = document.getElementById('timer-time').value;
-        targetTime = getNextTargetTime(time);
+        const [hours, minutes] = time.split(':').map(Number);
+        targetTime = new Date();
+        targetTime.setHours(hours, minutes, 0, 0);
         displayTarget = formatFullTime(targetTime);
     } else if (timerType === 'set') {
         const hours = parseInt(document.getElementById('set-hours').value) || 0;
@@ -128,14 +130,17 @@ function addTimer() {
 
     const timerId = newTimer.id;
     newTimer.innerHTML = `
-        <div class="timer-section timer-title">${name || 'Extra Timer'}</div>
-        <div class="timer-section timer-info">
-            <div>Target Time: ${displayTarget}</div>
-            <div id="${timerId}-display" class="timer-display">00:00:00</div>
-        </div>
-        <div class="timer-section button-container-outer">
-            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
-            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+        <div class="timer-title">${name || 'Extra Timer'}</div>
+        <div class="timer-section">
+            <div class="timer-info">
+                <div>Target Time:</div>
+                <div>${displayTarget}</div>
+                <div id="${timerId}-display" class="timer-display">00:00:00</div>
+            </div>
+            <div class="button-container-outer">
+                <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+                <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+            </div>
         </div>
     `;
     extraTimers.appendChild(newTimer);
@@ -153,7 +158,9 @@ function updateTimer() {
 
     if (timerType === 'until') {
         const time = document.getElementById('edit-timer-time').value;
-        targetTime = getNextTargetTime(time);
+        const [hours, minutes] = time.split(':').map(Number);
+        targetTime = new Date();
+        targetTime.setHours(hours, minutes, 0, 0);
         displayTarget = formatFullTime(targetTime);
     } else if (timerType === 'set') {
         const hours = parseInt(document.getElementById('edit-set-hours').value) || 0;
@@ -172,8 +179,7 @@ function updateTimer() {
     timer.dataset.seconds = parseInt(document.getElementById('edit-set-seconds').value) || 0;
 
     timer.querySelector('.timer-title').innerText = name || 'Extra Timer';
-    timer.querySelector('.timer-info div').innerText = `Target Time: ${displayTarget}`;
-    timer.querySelector('.timer-display').innerText = '00:00:00';
+    timer.querySelector('.timer-info').innerHTML = `<div>Target Time:</div><div>${displayTarget}</div><div id="${timerId}-display" class="timer-display">00:00:00</div>`;
 
     startExtraTimer(timerId, targetTime.toISOString());
     closeEditTimerModal();
@@ -192,19 +198,18 @@ function addPresetTimer(name, timeStr) {
 
     const timerId = newTimer.id;
 
-    const formattedName = name.includes('Saturday') || name.includes('Sunday') 
-        ? name.replace(' ', '<br>') 
-        : name;
-
     newTimer.innerHTML = `
-        <div class="timer-section timer-title">${formattedName}</div>
-        <div class="timer-section timer-info">
-            <div>Target Time: ${displayTarget}</div>
-            <div id="${timerId}-display" class="timer-display">00:00:00</div>
-        </div>
-        <div class="timer-section button-container-outer">
-            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
-            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+        <div class="timer-title">${name}</div>
+        <div class="timer-section">
+            <div class="timer-info">
+                <div>Target Time:</div>
+                <div>${displayTarget}</div>
+                <div id="${timerId}-display" class="timer-display">00:00:00</div>
+            </div>
+            <div class="button-container-outer">
+                <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+                <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+            </div>
         </div>
     `;
     extraTimers.appendChild(newTimer);
@@ -238,9 +243,12 @@ function startExtraTimer(timerId, targetTimeStr) {
         if (diff <= 0) {
             clearInterval(window[`${timerId}Interval`]);
             display.textContent = '00:00:00';
+            const timerElement = document.getElementById(timerId);
+            timerElement.classList.add('preset-red');
         } else {
             const seconds = Math.floor(diff / 1000);
             updateDisplay(display, seconds);
+            updateContainerBackground(timerId, seconds);
         }
     }, 1000);
 }
@@ -253,14 +261,47 @@ function clearExtraTimer(timerId) {
 
 function updateCurrentTime() {
     const now = new Date();
-    document.getElementById('current-time').textContent = `Current Time: ${formatFullTime(now)}`;
+    document.getElementById('current-time').textContent = formatFullTime(now);
     document.getElementById('current-date').textContent = formatFullDate(now);
 }
 
 function updateDisplay(display, seconds) {
     display.textContent = formatTime(seconds);
-    display.style.color = seconds <= 10 ? 'red' : seconds <= 30 ? 'blue' : 'black';
-    display.style.fontWeight = seconds <= 30 ? 'bold' : 'normal';
+    if (seconds <= 10) {
+        display.style.color = 'red';
+        display.style.fontWeight = 'bold';
+    } else if (seconds <= 15) {
+        display.style.color = 'orange';
+        display.style.fontWeight = 'bold';
+    } else if (seconds <= 30) {
+        display.style.color = 'blue';
+        display.style.fontWeight = 'bold';
+    } else if (seconds <= 60) {
+        display.style.color = 'green';
+        display.style.fontWeight = 'bold';
+    } else {
+        display.style.color = 'black';
+        display.style.fontWeight = 'normal';
+    }
+}
+
+function updateContainerBackground(timerId, seconds) {
+    const timerElement = document.getElementById(timerId);
+    if (seconds <= 10) {
+        timerElement.classList.add('preset-red');
+        timerElement.classList.remove('preset-orange', 'preset-blue', 'preset-green');
+    } else if (seconds <= 15) {
+        timerElement.classList.add('preset-orange');
+        timerElement.classList.remove('preset-red', 'preset-blue', 'preset-green');
+    } else if (seconds <= 30) {
+        timerElement.classList.add('preset-blue');
+        timerElement.classList.remove('preset-red', 'preset-orange', 'preset-green');
+    } else if (seconds <= 60) {
+        timerElement.classList.add('preset-green');
+        timerElement.classList.remove('preset-red', 'preset-orange', 'preset-blue');
+    } else {
+        timerElement.classList.remove('preset-red', 'preset-orange', 'preset-blue', 'preset-green');
+    }
 }
 
 setInterval(updateCurrentTime, 1000);
