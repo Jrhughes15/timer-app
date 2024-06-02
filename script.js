@@ -105,9 +105,8 @@ function addTimer() {
 
     if (timerType === 'until') {
         const time = document.getElementById('timer-time').value;
-        const [hours, minutes] = time.split(':').map(Number);
-        targetTime = new Date();
-        targetTime.setHours(hours, minutes, 0, 0);
+        const [hours, minutes, seconds] = time.split(':').map(Number);
+        targetTime = getNextTargetTime(`${hours}:${minutes}:${seconds}`);
         displayTarget = formatFullTime(targetTime);
     } else if (timerType === 'set') {
         const hours = parseInt(document.getElementById('set-hours').value) || 0;
@@ -132,15 +131,12 @@ function addTimer() {
     newTimer.innerHTML = `
         <div class="timer-title">${name || 'Extra Timer'}</div>
         <div class="timer-section">
-            <div class="timer-info">
-                <div>Target Time:</div>
-                <div>${displayTarget}</div>
-                <div id="${timerId}-display" class="timer-display">00:00:00</div>
-            </div>
-            <div class="button-container-outer">
-                <button onclick="clearExtraTimer('${timerId}')">Clear</button>
-                <button onclick="showEditTimerModal('${timerId}')">Edit</button>
-            </div>
+            <div class="timer-info">Target Time: ${displayTarget}</div>
+            <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        </div>
+        <div class="button-container-outer">
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
         </div>
     `;
     extraTimers.appendChild(newTimer);
@@ -158,9 +154,8 @@ function updateTimer() {
 
     if (timerType === 'until') {
         const time = document.getElementById('edit-timer-time').value;
-        const [hours, minutes] = time.split(':').map(Number);
-        targetTime = new Date();
-        targetTime.setHours(hours, minutes, 0, 0);
+        const [hours, minutes, seconds] = time.split(':').map(Number);
+        targetTime = getNextTargetTime(`${hours}:${minutes}:${seconds}`);
         displayTarget = formatFullTime(targetTime);
     } else if (timerType === 'set') {
         const hours = parseInt(document.getElementById('edit-set-hours').value) || 0;
@@ -179,7 +174,8 @@ function updateTimer() {
     timer.dataset.seconds = parseInt(document.getElementById('edit-set-seconds').value) || 0;
 
     timer.querySelector('.timer-title').innerText = name || 'Extra Timer';
-    timer.querySelector('.timer-info').innerHTML = `<div>Target Time:</div><div>${displayTarget}</div><div id="${timerId}-display" class="timer-display">00:00:00</div>`;
+    timer.querySelector('.timer-info').innerHTML = `Target Time: ${displayTarget}`;
+    timer.querySelector('.timer-display').innerHTML = '00:00:00';
 
     startExtraTimer(timerId, targetTime.toISOString());
     closeEditTimerModal();
@@ -201,15 +197,12 @@ function addPresetTimer(name, timeStr) {
     newTimer.innerHTML = `
         <div class="timer-title">${name}</div>
         <div class="timer-section">
-            <div class="timer-info">
-                <div>Target Time:</div>
-                <div>${displayTarget}</div>
-                <div id="${timerId}-display" class="timer-display">00:00:00</div>
-            </div>
-            <div class="button-container-outer">
-                <button onclick="clearExtraTimer('${timerId}')">Clear</button>
-                <button onclick="showEditTimerModal('${timerId}')">Edit</button>
-            </div>
+            <div class="timer-info">Target Time: ${displayTarget}</div>
+            <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        </div>
+        <div class="button-container-outer">
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
         </div>
     `;
     extraTimers.appendChild(newTimer);
