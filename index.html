@@ -9,25 +9,19 @@
 <body>
     <div id="app">
         <h1>Time Manager</h1>
-        <div id="current-date" class="large-font">Date: Saturday - June - 6/1/2024</div>
-        <div id="current-time" class="large-font">Current Time: 00:00:00 am</div>
-        
-        <div class="timer-container">
-            <div class="timer" id="stopwatch">
-                <h2>Stopwatch</h2>
-                <div id="stopwatch-display" class="timer-display large-font">00:00:00</div>
-                <div class="button-container">
-                    <button onclick="startStopwatch()">Start</button>
-                    <button onclick="stopStopwatch()">Stop</button>
-                    <button onclick="resetStopwatch()">Reset</button>
-                </div>
+        <div id="current-date"></div>
+        <div id="current-time"></div>
+        <div id="stopwatch">
+            <h2>Stopwatch</h2>
+            <div id="stopwatch-display" class="timer-display large-font">00:00:00</div> <!-- Updated class to large-font -->
+            <div class="button-container">
+                <button onclick="startStopwatch()">Start</button>
+                <button onclick="stopStopwatch()">Stop</button>
+                <button onclick="resetStopwatch()">Reset</button>
             </div>
         </div>
-
         <h2>Countdowns</h2>
-        
-        <button id="add-timer" class="full-width" onclick="showAddTimerModal()">Add Custom Countdown</button>
-
+        <button id="add-timer" onclick="showAddTimerModal()">Add Custom Countdown</button>
         <h3>Weekday Shows</h3>
         <div id="weekday-buttons" class="button-grid">
             <button onclick="addPresetTimer('AM Show Start', '04:30:00')">AM Show<br>Start</button>
@@ -45,29 +39,26 @@
             <button class="offset" onclick="addPresetTimer('10 PM Start', '22:00:00')">10 PM<br>Start</button>
             <button class="offset" onclick="addPresetTimer('10 PM End', '22:28:30')">10 PM<br>End</button>
         </div>
-
         <h3>Saturday Shows</h3>
         <div id="saturday-buttons" class="button-grid">
-            <button onclick="addPresetTimer('Saturday\nAM Start', '08:00:00')">SAT AM<br>Start</button>
-            <button onclick="addPresetTimer('Saturday\nAM End', '09:58:30')">SAT AM<br>End</button>
-            <button onclick="addPresetTimer('Saturday\n5 PM Start', '17:00:00')">5 PM<br>Start</button>
-            <button onclick="addPresetTimer('Saturday\n5 PM End', '17:28:30')">5 PM<br>End</button>
-            <button onclick="addPresetTimer('Saturday\n6 PM Start', '18:00:00')">6 PM<br>Start</button>
-            <button onclick="addPresetTimer('Saturday\n6 PM End', '18:28:30')">6 PM<br>End</button>
-            <button onclick="addPresetTimer('Saturday\n10 PM Start', '22:00:00')">10 PM<br>Start</button>
-            <button onclick="addPresetTimer('Saturday\n10 PM End', '22:58:30')">10 PM<br>End</button>
+            <button onclick="addPresetTimer('Saturday AM Start', '08:00:00')">SAT AM<br>Start</button>
+            <button onclick="addPresetTimer('Saturday AM End', '09:58:30')">SAT AM<br>End</button>
+            <button onclick="addPresetTimer('Saturday 5 PM Start', '17:00:00')">5 PM<br>Start</button>
+            <button onclick="addPresetTimer('Saturday 5 PM End', '17:28:30')">5 PM<br>End</button>
+            <button onclick="addPresetTimer('Saturday 6 PM Start', '18:00:00')">6 PM<br>Start</button>
+            <button onclick="addPresetTimer('Saturday 6 PM End', '18:28:30')">6 PM<br>End</button>
+            <button onclick="addPresetTimer('Saturday 10 PM Start', '22:00:00')">10 PM<br>Start</button>
+            <button onclick="addPresetTimer('Saturday 10 PM End', '22:58:30')">10 PM<br>End</button>
         </div>
-
         <h3>Sunday Shows</h3>
         <div id="sunday-buttons" class="button-grid">
-            <button onclick="addPresetTimer('Sunday\nAM Start', '07:00:00')">SUN AM<br>Start</button>
-            <button onclick="addPresetTimer('Sunday\nAM End', '07:58:30')">SUN AM<br>End</button>
-            <button onclick="addPresetTimer('Sunday\n5:30 PM Start', '17:30:00')">5:30 PM<br>Start</button>
-            <button onclick="addPresetTimer('Sunday\n5:30 PM End', '17:58:30')">5:30 PM<br>End</button>
-            <button class="offset" onclick="addPresetTimer('Sunday\n10 PM Start', '22:00:00')">10 PM<br>Start</button>
-            <button class="offset" onclick="addPresetTimer('Sunday\n10 PM End', '22:58:30')">10 PM<br>End</button>
+            <button onclick="addPresetTimer('Sunday AM Start', '07:00:00')">SUN AM<br>Start</button>
+            <button onclick="addPresetTimer('Sunday AM End', '07:58:30')">SUN AM<br>End</button>
+            <button onclick="addPresetTimer('Sunday 5:30 PM Start', '17:30:00')">5:30 PM<br>Start</button>
+            <button onclick="addPresetTimer('Sunday 5:30 PM End', '17:58:30')">5:30 PM<br>End</button>
+            <button class="offset" onclick="addPresetTimer('Sunday 10 PM Start', '22:00:00')">10 PM<br>Start</button>
+            <button class="offset" onclick="addPresetTimer('Sunday 10 PM End', '22:58:30')">10 PM<br>End</button>
         </div>
-
         <div id="extra-timers" class="center-timers"></div>
     </div>
 
@@ -75,23 +66,26 @@
         <div class="modal-content">
             <span class="close" onclick="closeAddTimerModal()">&times;</span>
             <h2>Add Timer</h2>
-            <input type="text" id="timer-name" placeholder="Timer Name">
-            <div>
-                <label for="timer-type">Timer Type:</label>
-                <select id="timer-type" onchange="toggleTimerInputs()">
-                    <option value="until">Time Until</option>
-                    <option value="set">Set Time</option>
-                </select>
+            <label for="timer-name">Name:</label>
+            <input type="text" id="timer-name" class="timer-input">
+            <label for="timer-type">Type:</label>
+            <select id="timer-type" onchange="toggleTimerInputs()">
+                <option value="until">Time Until</option>
+                <option value="set">Set Duration</option>
+            </select>
+            <div id="until-input">
+                <label for="timer-time">Time:</label>
+                <input type="time" id="timer-time" class="timer-input" step="1">
             </div>
-            <div id="until-input" class="timer-input">
-                <input type="time" id="timer-time" step="1">
+            <div id="set-input" style="display: none;">
+                <label for="set-hours">Hours:</label>
+                <input type="number" id="set-hours" class="timer-input" min="0" max="23">
+                <label for="set-minutes">Minutes:</label>
+                <input type="number" id="set-minutes" class="timer-input" min="0" max="59">
+                <label for="set-seconds">Seconds:</label>
+                <input type="number" id="set-seconds" class="timer-input" min="0" max="59">
             </div>
-            <div id="set-input" class="timer-input" style="display:none;">
-                <input type="number" id="set-hours" placeholder="Hours" min="0">
-                <input type="number" id="set-minutes" placeholder="Minutes" min="0" max="59">
-                <input type="number" id="set-seconds" placeholder="Seconds" min="0" max="59">
-            </div>
-            <button onclick="addTimer()">Add</button>
+            <button class="modal-button" onclick="addTimer()">Add Timer</button> <!-- Updated class -->
         </div>
     </div>
 
@@ -100,23 +94,26 @@
             <span class="close" onclick="closeEditTimerModal()">&times;</span>
             <h2>Edit Timer</h2>
             <input type="hidden" id="edit-timer-id">
-            <input type="text" id="edit-timer-name" placeholder="Timer Name">
-            <div>
-                <label for="edit-timer-type">Timer Type:</label>
-                <select id="edit-timer-type" onchange="toggleEditTimerInputs()">
-                    <option value="until">Time Until</option>
-                    <option value="set">Set Time</option>
-                </select>
+            <label for="edit-timer-name">Name:</label>
+            <input type="text" id="edit-timer-name" class="timer-input">
+            <label for="edit-timer-type">Type:</label>
+            <select id="edit-timer-type" onchange="toggleEditTimerInputs()">
+                <option value="until">Time Until</option>
+                <option value="set">Set Duration</option>
+            </select>
+            <div id="edit-until-input">
+                <label for="edit-timer-time">Time:</label>
+                <input type="time" id="edit-timer-time" class="timer-input" step="1">
             </div>
-            <div id="edit-until-input" class="timer-input">
-                <input type="time" id="edit-timer-time" step="1">
+            <div id="edit-set-input" style="display: none;">
+                <label for="edit-set-hours">Hours:</label>
+                <input type="number" id="edit-set-hours" class="timer-input" min="0" max="23">
+                <label for="edit-set-minutes">Minutes:</label>
+                <input type="number" id="edit-set-minutes" class="timer-input" min="0" max="59">
+                <label for="edit-set-seconds">Seconds:</label>
+                <input type="number" id="edit-set-seconds" class="timer-input" min="0" max="59">
             </div>
-            <div id="edit-set-input" class="timer-input" style="display:none;">
-                <input type="number" id="edit-set-hours" placeholder="Hours" min="0">
-                <input type="number" id="edit-set-minutes" placeholder="Minutes" min="0" max="59">
-                <input type="number" id="edit-set-seconds" placeholder="Seconds" min="0" max="59">
-            </div>
-            <button onclick="updateTimer()">Save</button>
+            <button class="modal-button" onclick="updateTimer()">Update Timer</button> <!-- Updated class -->
         </div>
     </div>
 
