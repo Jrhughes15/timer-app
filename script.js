@@ -135,8 +135,8 @@ function addTimer() {
             <div id="${timerId}-display" class="timer-display">00:00:00</div>
         </div>
         <div class="button-container-outer">
-            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
             <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
         </div>
     `;
     extraTimers.appendChild(newTimer);
@@ -201,8 +201,8 @@ function addPresetTimer(name, timeStr) {
             <div id="${timerId}-display" class="timer-display">00:00:00</div>
         </div>
         <div class="button-container-outer">
-            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
             <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
         </div>
     `;
     extraTimers.appendChild(newTimer);
