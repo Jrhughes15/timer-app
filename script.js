@@ -297,38 +297,5 @@ function updateContainerBackground(timerId, seconds) {
     }
 }
 
-function loadPresets() {
-    fetch('presets.json')
-        .then(response => response.json())
-        .then(presets => {
-            const presetButtonsContainer = document.getElementById('preset-buttons');
-            for (const section in presets) {
-                const sectionTitle = document.createElement('h3');
-                sectionTitle.textContent = section;
-                presetButtonsContainer.appendChild(sectionTitle);
-
-                const buttonGrid = document.createElement('div');
-                buttonGrid.className = 'button-grid';
-
-                presets[section].forEach(preset => {
-                    const button = document.createElement('button');
-                    button.innerHTML = `${preset.name.split(' ').join('<br>')}`;
-                    button.onclick = () => addPresetTimer(preset.name, preset.start);
-                    buttonGrid.appendChild(button);
-
-                    if (preset.end) {
-                        const endButton = document.createElement('button');
-                        endButton.innerHTML = `${preset.name.split(' ').join('<br>')}<br>End`;
-                        endButton.onclick = () => addPresetTimer(`${preset.name} End`, preset.end);
-                        buttonGrid.appendChild(endButton);
-                    }
-                });
-
-                presetButtonsContainer.appendChild(buttonGrid);
-            }
-        });
-}
-
 setInterval(updateCurrentTime, 1000);
 updateCurrentTime();
-loadPresets();
