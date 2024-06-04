@@ -87,6 +87,10 @@ h3 {
     gap: 10px;
 }
 
+#short-timers.button-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
 .button-grid .offset {
     grid-column: span 2;
 }
@@ -167,17 +171,18 @@ h3 {
 }
 
 .button-container-outer button {
-    flex: 1;
+    flex: 1 0 45%;
+    font-size: 1.2em;
+    padding: 10px;
     margin: 5px;
-    height: 50px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 1.2em;
+    box-sizing: border-box;
 }
 
-/* Modal styling */
 .modal {
     display: none;
     position: fixed;
@@ -191,14 +196,14 @@ h3 {
 }
 
 .modal-content {
-    background-color: #fff;
+    background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 90%;
-    max-width: 300px;
-    text-align: center;
+    width: 80%;
+    max-width: 500px;
     border-radius: 10px;
+    box-sizing: border-box;
 }
 
 .close {
@@ -215,43 +220,39 @@ h3 {
     cursor: pointer;
 }
 
-input[type="time"], input[type="text"], input[type="number"], select {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    padding: 5px;
-    width: calc(100% - 20px);
-    box-sizing: border-box;
-}
-
 .timer-input {
-    margin-bottom: 10px;
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 1.2em;
+    box-sizing: border-box;
 }
 
-button.modal-button {
-    font-size: 1.2em; /* Updated size */
-    padding: 10px;
-    margin: 5px;
+.modal-button {
     width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1.2em;
     box-sizing: border-box;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
 }
 
 .preset-green {
-    background-color: #e6ffe6;
+    background-color: #ccffcc;
 }
 
 .preset-blue {
-    background-color: #e6f2ff;
+    background-color: #cce6ff;
 }
 
 .preset-orange {
-    background-color: #fff5e6;
+    background-color: #ffddcc;
 }
 
 .preset-red {
-    background-color: #ffe6e6;
+    background-color: #ffcccc;
+}
+
+hr {
+    border: 1px solid #ddd;
+    margin: 20px 0;
 }
