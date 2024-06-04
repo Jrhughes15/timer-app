@@ -1,137 +1,347 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Manager</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div id="app">
-        <h1>Time Manager</h1>
-        <hr> <!-- Separator after Time Manager -->
-        <div id="current-date"></div>
-        <div id="current-time"></div>
-        <hr> <!-- Separator after current time -->
-        <div id="stopwatch">
-            <h2>Stopwatch</h2>
-            <div id="stopwatch-display" class="timer-display large-font">00:00:00</div> <!-- Updated class to large-font -->
-            <div class="button-container">
-                <button onclick="startStopwatch()">Start</button>
-                <button onclick="stopStopwatch()">Stop</button>
-                <button onclick="restartStopwatch()">Restart</button> <!-- Added Restart button -->
-                <button onclick="resetStopwatch()">Reset</button>
-            </div>
-        </div>
-        <hr> <!-- Separator after stopwatch reset button -->
-        <h2>Countdowns</h2>
-        <div id="short-timers" class="button-grid">
-            <button onclick="addShortDurationTimer('30 Seconds', '00:30')">00:30</button>
-            <button onclick="addShortDurationTimer('1 Minute', '01:00')">1:00</button>
-            <button onclick="addShortDurationTimer('1 Minutes 30 Seconds', '01:30')">1:30</button>
-            <button onclick="addShortDurationTimer('2 Minutes', '02:00')">2:00</button>
-            <button onclick="addShortDurationTimer('2 Minutes 30 Seconds', '02:30')">2:30</button>
-            <button onclick="addShortDurationTimer('3 Minutes', '03:00')">3:00</button>
-            <button onclick="addShortDurationTimer('3 Minutes 30 Seconds', '03:30')">3:30</button>
-            <button onclick="addShortDurationTimer('4 Minutes', '04:00')">4:00</button>
-        </div>
-        <button id="add-timer" onclick="showAddTimerModal()">Add Custom Countdown</button>
-        <h3>Weekday Show Presets</h3>
-        <div id="weekday-buttons" class="button-grid">
-            <button onclick="addPresetTimer('AM Show Start', '04:30:00')">AM Show<br>Start</button>
-            <button onclick="addPresetTimer('AM Show End', '06:56:57')">AM Show<br>End</button>
-            <button onclick="addPresetTimer('GDSA Start', '09:00:00')">GDSA<br>Start</button>
-            <button onclick="addPresetTimer('GDSA End', '09:58:26')">GDSA<br>End</button>
-            <button onclick="addPresetTimer('Noon Start', '11:58:41')">Noon<br>Start</button>
-            <button onclick="addPresetTimer('Noon End', '12:26:52')">Noon<br>End</button>
-            <button onclick="addPresetTimer('4 PM Start', '15:56:56')">4 PM<br>Start</button>
-            <button onclick="addPresetTimer('4 PM End', '16:26:00')">4 PM<br>End</button>
-            <button onclick="addPresetTimer('5 PM Start', '16:57:20')">5 PM<br>Start</button>
-            <button onclick="addPresetTimer('5 PM End', '17:27:02')">5 PM<br>End</button>
-            <button onclick="addPresetTimer('6 PM Start', '17:58:56')">6 PM<br>Start</button>
-            <button onclick="addPresetTimer('6 PM End', '18:25:41')">6 PM<br>End</button>
-            <button class="offset" onclick="addPresetTimer('10 PM Start', '21:59:50')">10 PM<br>Start</button>
-            <button class="offset" onclick="addPresetTimer('10 PM End', '22:26:00')">10 PM<br>End</button>
-        </div>
-        <h3>Saturday Show Presets</h3>
-        <div id="saturday-buttons" class="button-grid">
-            <button onclick="addPresetTimer('Saturday AM Start', '07:58:55')">SAT AM<br>Start</button>
-            <button onclick="addPresetTimer('Saturday AM End', '09:57:27')">SAT AM<br>End</button>
-            <button onclick="addPresetTimer('Saturday 5 PM Start', '17:00:00')">5 PM<br>Start</button>
-            <button onclick="addPresetTimer('Saturday 5 PM End', '17:29:51')">5 PM<br>End</button>
-            <button onclick="addPresetTimer('Saturday 6 PM Start', '17:58:56')">6 PM<br>Start</button>
-            <button onclick="addPresetTimer('Saturday 6 PM End', '18:25:50')">6 PM<br>End</button>
-            <button onclick="addPresetTimer('Saturday 10 PM Start', '21:59:50')">10 PM<br>Start</button>
-            <button onclick="addPresetTimer('Saturday 10 PM End', '22:55:30')">10 PM<br>End</button>
-        </div>
-        <h3>Sunday Show Presets</h3>
-        <div id="sunday-buttons" class="button-grid">
-            <button onclick="addPresetTimer('Sunday AM Start', '07:00:00')">SUN AM<br>Start</button>
-            <button onclick="addPresetTimer('Sunday AM End', '07:57:51')">SUN AM<br>End</button>
-            <button onclick="addPresetTimer('Sunday 5:30 PM Start', '17:30:00')">5:30 PM<br>Start</button>
-            <button onclick="addPresetTimer('Sunday 5:30 PM End', '17:56:21')">5:30 PM<br>End</button>
-            <button class="offset" onclick="addPresetTimer('Sunday 10 PM Start', '21:59:50')">10 PM<br>Start</button>
-            <button class="offset" onclick="addPresetTimer('Sunday 10 PM End', '23:00:00')">10 PM<br>End</button>
-        </div>
-        <hr> <!-- Separator after Sunday 10pm start/end buttons -->
-        <div id="extra-timers" class="center-timers"></div>
-    </div>
+let stopwatchInterval;
+let stopwatchSeconds = 0;
 
-    <div id="add-timer-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAddTimerModal()">&times;</span>
-            <h2>Add Timer</h2>
-            <label for="timer-name">Name:</label>
-            <input type="text" id="timer-name" class="timer-input">
-            <label for="timer-type">Type:</label>
-            <select id="timer-type" onchange="toggleTimerInputs()">
-                <option value="until">Time Until</option>
-                <option value="set">Set Duration</option>
-            </select>
-            <div id="until-input">
-                <label for="timer-time">Time:</label>
-                <input type="time" id="timer-time" class="timer-input" step="1">
-            </div>
-            <div id="set-input" style="display: none;">
-                <label for="set-hours">Hours:</label>
-                <input type="number" id="set-hours" class="timer-input" min="0" max="23">
-                <label for="set-minutes">Minutes:</label>
-                <input type="number" id="set-minutes" class="timer-input" min="0" max="59">
-                <label for="set-seconds">Seconds:</label>
-                <input type="number" id="set-seconds" class="timer-input" min="0" max="59">
-            </div>
-            <button class="modal-button" onclick="addTimer()">Add Timer</button> <!-- Updated class -->
-        </div>
-    </div>
+function startStopwatch() {
+    const display = document.getElementById('stopwatch-display');
+    
+    clearInterval(stopwatchInterval);
 
-    <div id="edit-timer-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeEditTimerModal()">&times;</span>
-            <h2>Edit Timer</h2>
-            <input type="hidden" id="edit-timer-id">
-            <label for="edit-timer-name">Name:</label>
-            <input type="text" id="edit-timer-name" class="timer-input">
-            <label for="edit-timer-type">Type:</label>
-            <select id="edit-timer-type" onchange="toggleEditTimerInputs()">
-                <option value="until">Time Until</option>
-                <option value="set">Set Duration</option>
-            </select>
-            <div id="edit-until-input">
-                <label for="edit-timer-time">Time:</label>
-                <input type="time" id="edit-timer-time" class="timer-input" step="1">
-            </div>
-            <div id="edit-set-input" style="display: none;">
-                <label for="edit-set-hours">Hours:</label>
-                <input type="number" id="edit-set-hours" class="timer-input" min="0" max="23">
-                <label for="edit-set-minutes">Minutes:</label>
-                <input type="number" id="edit-set-minutes" class="timer-input" min="0" max="59">
-                <label for="edit-set-seconds">Seconds:</label>
-                <input type="number" id="edit-set-seconds" class="timer-input" min="0" max="59">
-            </div>
-            <button class="modal-button" onclick="updateTimer()">Update Timer</button> <!-- Updated class -->
-        </div>
-    </div>
+    stopwatchInterval = setInterval(() => {
+        stopwatchSeconds++;
+        display.textContent = formatTime(stopwatchSeconds);
+    }, 1000);
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+function stopStopwatch() {
+    clearInterval(stopwatchInterval);
+}
+
+function resetStopwatch() {
+    clearInterval(stopwatchInterval);
+    stopwatchSeconds = 0;
+    document.getElementById('stopwatch-display').textContent = '00:00:00';
+}
+
+function restartStopwatch() {
+    resetStopwatch();
+    startStopwatch();
+}
+
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+}
+
+function formatFullTime(date) {
+    const hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes}:${seconds} ${ampm}`;
+}
+
+function formatFullDate(date) {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const day = days[date.getDay()];
+    const month = months[date.getMonth()];
+    const dayNum = date.getDate();
+    const year = date.getFullYear();
+    return `${day} - ${month} - ${date.getMonth() + 1}/${dayNum}/${year}`;
+}
+
+function showAddTimerModal() {
+    document.getElementById('add-timer-modal').style.display = 'block';
+}
+
+function closeAddTimerModal() {
+    document.getElementById('add-timer-modal').style.display = 'none';
+}
+
+function showEditTimerModal(timerId) {
+    const timer = document.getElementById(timerId);
+    const name = timer.querySelector('.timer-title').innerText;
+    const type = timer.dataset.type;
+    const targetTime = timer.dataset.targetTime;
+    const hours = timer.dataset.hours || 0;
+    const minutes = timer.dataset.minutes || 0;
+    const seconds = timer.dataset.seconds || 0;
+
+    document.getElementById('edit-timer-id').value = timerId;
+    document.getElementById('edit-timer-name').value = name;
+    document.getElementById('edit-timer-type').value = type;
+    
+    if (type === 'until') {
+        document.getElementById('edit-timer-time').value = targetTime;
+    } else if (type === 'set') {
+        document.getElementById('edit-set-hours').value = hours;
+        document.getElementById('edit-set-minutes').value = minutes;
+        document.getElementById('edit-set-seconds').value = seconds;
+    }
+    
+    toggleEditTimerInputs();
+    document.getElementById('edit-timer-modal').style.display = 'block';
+}
+
+function closeEditTimerModal() {
+    document.getElementById('edit-timer-modal').style.display = 'none';
+}
+
+function toggleTimerInputs() {
+    const timerType = document.getElementById('timer-type').value;
+    document.getElementById('until-input').style.display = timerType === 'until' ? 'block' : 'none';
+    document.getElementById('set-input').style.display = timerType === 'set' ? 'block' : 'none';
+}
+
+function toggleEditTimerInputs() {
+    const timerType = document.getElementById('edit-timer-type').value;
+    document.getElementById('edit-until-input').style.display = timerType === 'until' ? 'block' : 'none';
+    document.getElementById('edit-set-input').style.display = timerType === 'set' ? 'block' : 'none';
+}
+
+function addTimer() {
+    const name = document.getElementById('timer-name').value;
+    const timerType = document.getElementById('timer-type').value;
+    let targetTime;
+    let displayTarget;
+
+    if (timerType === 'until') {
+        const time = document.getElementById('timer-time').value;
+        const [hours, minutes, seconds] = time.split(':').map(Number);
+        targetTime = getNextTargetTime(`${hours}:${minutes}:${seconds}`);
+        displayTarget = formatFullTime(targetTime);
+    } else if (timerType === 'set') {
+        const hours = parseInt(document.getElementById('set-hours').value) || 0;
+        const minutes = parseInt(document.getElementById('set-minutes').value) || 0;
+        const seconds = parseInt(document.getElementById('set-seconds').value) || 0;
+        const now = new Date();
+        targetTime = new Date(now.getTime() + ((hours * 3600 + minutes * 60 + seconds) * 1000));
+        displayTarget = `${hours} hrs ${minutes} mins ${seconds} secs (${formatFullTime(targetTime)})`;
+    }
+
+    const extraTimers = document.getElementById('extra-timers');
+    const newTimer = document.createElement('div');
+    newTimer.className = 'timer-container-outer';
+    newTimer.id = `timer-${Date.now()}`;
+    newTimer.dataset.type = timerType;
+    newTimer.dataset.targetTime = targetTime.toISOString();
+    newTimer.dataset.hours = parseInt(document.getElementById('set-hours').value) || 0;
+    newTimer.dataset.minutes = parseInt(document.getElementById('set-minutes').value) || 0;
+    newTimer.dataset.seconds = parseInt(document.getElementById('set-seconds').value) || 0;
+
+    const timerId = newTimer.id;
+    newTimer.innerHTML = `
+        <div class="timer-title">${name || 'Extra Timer'}</div>
+        <div class="timer-section">
+            <div class="timer-info">Target Time: ${displayTarget}</div>
+            <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        </div>
+        <div class="button-container-outer">
+            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+        </div>
+    `;
+    extraTimers.appendChild(newTimer);
+
+    startExtraTimer(timerId, targetTime.toISOString());
+    closeAddTimerModal();
+}
+
+function updateTimer() {
+    const timerId = document.getElementById('edit-timer-id').value;
+    const name = document.getElementById('edit-timer-name').value;
+    const timerType = document.getElementById('edit-timer-type').value;
+    let targetTime;
+    let displayTarget;
+
+    if (timerType === 'until') {
+        const time = document.getElementById('edit-timer-time').value;
+        const [hours, minutes, seconds] = time.split(':').map(Number);
+        targetTime = getNextTargetTime(`${hours}:${minutes}:${seconds}`);
+        displayTarget = formatFullTime(targetTime);
+    } else if (timerType === 'set') {
+        const hours = parseInt(document.getElementById('edit-set-hours').value) || 0;
+        const minutes = parseInt(document.getElementById('edit-set-minutes').value) || 0;
+        const seconds = parseInt(document.getElementById('edit-set-seconds').value) || 0;
+        const now = new Date();
+        targetTime = new Date(now.getTime() + ((hours * 3600 + minutes * 60 + seconds) * 1000));
+        displayTarget = `${hours} hrs ${minutes} mins ${seconds} secs (${formatFullTime(targetTime)})`;
+    }
+
+    const timer = document.getElementById(timerId);
+    timer.dataset.type = timerType;
+    timer.dataset.targetTime = targetTime.toISOString();
+    timer.dataset.hours = parseInt(document.getElementById('edit-set-hours').value) || 0;
+    timer.dataset.minutes = parseInt(document.getElementById('edit-set-minutes').value) || 0;
+    timer.dataset.seconds = parseInt(document.getElementById('edit-set-seconds').value) || 0;
+
+    timer.querySelector('.timer-title').innerText = name || 'Extra Timer';
+    timer.querySelector('.timer-info').innerHTML = `Target Time: ${displayTarget}`;
+    timer.querySelector('.timer-display').innerHTML = '00:00:00';
+
+    startExtraTimer(timerId, targetTime.toISOString());
+    closeEditTimerModal();
+}
+
+function addPresetTimer(name, timeStr, isDuration = false) {
+    let targetTime;
+    let displayTarget;
+
+    if (isDuration) {
+        const [minutes, seconds] = timeStr.split(':').map(Number);
+        const now = new Date();
+        targetTime = new Date(now.getTime() + (minutes * 60 + seconds) * 1000);
+        displayTarget = `${minutes} mins ${seconds} secs (${formatFullTime(targetTime)})`;
+    } else {
+        targetTime = getNextTargetTime(timeStr);
+        displayTarget = formatFullTime(targetTime);
+    }
+
+    const extraTimers = document.getElementById('extra-timers');
+    const newTimer = document.createElement('div');
+    newTimer.className = 'timer-container-outer';
+    newTimer.id = `timer-${Date.now()}`;
+    newTimer.dataset.type = 'until';
+    newTimer.dataset.targetTime = targetTime.toISOString();
+
+    const timerId = newTimer.id;
+
+    newTimer.innerHTML = `
+        <div class="timer-title">${name}</div>
+        <div class="timer-section">
+            <div class="timer-info">Target Time: ${displayTarget}</div>
+            <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        </div>
+        <div class="button-container-outer">
+            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+        </div>
+    `;
+    extraTimers.appendChild(newTimer);
+
+    startExtraTimer(timerId, targetTime.toISOString());
+}
+
+function addShortDurationTimer(name, duration) {
+    const [minutes, seconds] = duration.split(':').map(Number);
+    const now = new Date();
+    const targetTime = new Date(now.getTime() + (minutes * 60 + seconds) * 1000);
+    const displayTarget = `${minutes} mins ${seconds} secs (${formatFullTime(targetTime)})`;
+
+    const extraTimers = document.getElementById('extra-timers');
+    const newTimer = document.createElement('div');
+    newTimer.className = 'timer-container-outer';
+    newTimer.id = `timer-${Date.now()}`;
+    newTimer.dataset.type = 'until';
+    newTimer.dataset.targetTime = targetTime.toISOString();
+
+    const timerId = newTimer.id;
+
+    newTimer.innerHTML = `
+        <div class="timer-title">${name}</div>
+        <div class="timer-section">
+            <div class="timer-info">Target Time: ${displayTarget}</div>
+            <div id="${timerId}-display" class="timer-display">00:00:00</div>
+        </div>
+        <div class="button-container-outer">
+            <button onclick="showEditTimerModal('${timerId}')">Edit</button>
+            <button onclick="clearExtraTimer('${timerId}')">Clear</button>
+        </div>
+    `;
+    extraTimers.appendChild(newTimer);
+
+    startExtraTimer(timerId, targetTime.toISOString());
+}
+
+function getNextTargetTime(timeStr) {
+    const now = new Date();
+    const targetTime = new Date(now);
+    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+    targetTime.setHours(hours, minutes, seconds, 0);
+
+    if (targetTime <= now) {
+        targetTime.setDate(targetTime.getDate() + 1);
+    }
+
+    return targetTime;
+}
+
+function startExtraTimer(timerId, targetTimeStr) {
+    const targetTime = new Date(targetTimeStr);
+    const display = document.getElementById(`${timerId}-display`);
+
+    clearInterval(window[`${timerId}Interval`]);
+
+    window[`${timerId}Interval`] = setInterval(() => {
+        const now = new Date();
+        const diff = targetTime - now;
+
+        if (diff <= 0) {
+            clearInterval(window[`${timerId}Interval`]);
+            display.textContent = '00:00:00';
+            const timerElement = document.getElementById(timerId);
+            timerElement.classList.add('preset-red');
+        } else {
+            const seconds = Math.floor(diff / 1000);
+            updateDisplay(display, seconds);
+            updateContainerBackground(timerId, seconds);
+        }
+    }, 1000);
+}
+
+function clearExtraTimer(timerId) {
+    const timerElement = document.getElementById(timerId);
+    clearInterval(window[`${timerId}Interval`]);
+    timerElement.remove();
+}
+
+function updateCurrentTime() {
+    const now = new Date();
+    document.getElementById('current-time').textContent = formatFullTime(now);
+    document.getElementById('current-date').textContent = formatFullDate(now);
+}
+
+function updateDisplay(display, seconds) {
+    display.textContent = formatTime(seconds);
+    if (seconds <= 10) {
+        display.style.color = 'red';
+        display.style.fontWeight = 'bold';
+    } else if (seconds <= 15) {
+        display.style.color = 'orange';
+        display.style.fontWeight = 'bold';
+    } else if (seconds <= 30) {
+        display.style.color = 'blue';
+        display.style.fontWeight = 'bold';
+    } else if (seconds <= 60) {
+        display.style.color = 'green';
+        display.style.fontWeight = 'bold';
+    } else {
+        display.style.color = 'black';
+        display.style.fontWeight = 'normal';
+    }
+}
+
+function updateContainerBackground(timerId, seconds) {
+    const timerElement = document.getElementById(timerId);
+    if (seconds <= 10) {
+        timerElement.classList.add('preset-red');
+        timerElement.classList.remove('preset-orange', 'preset-blue', 'preset-green');
+    } else if (seconds <= 15) {
+        timerElement.classList.add('preset-orange');
+        timerElement.classList.remove('preset-red', 'preset-blue', 'preset-green');
+    } else if (seconds <= 30) {
+        timerElement.classList.add('preset-blue');
+        timerElement.classList.remove('preset-red', 'preset-orange', 'preset-green');
+    } else if (seconds <= 60) {
+        timerElement.classList.add('preset-green');
+        timerElement.classList.remove('preset-red', 'preset-orange', 'preset-blue');
+    } else {
+        timerElement.classList.remove('preset-red', 'preset-orange', 'preset-blue', 'preset-green');
+    }
+}
+
+setInterval(updateCurrentTime, 1000);
+updateCurrentTime();
