@@ -22,6 +22,11 @@ function resetStopwatch() {
     document.getElementById('stopwatch-display').textContent = '00:00:00';
 }
 
+function restartStopwatch() {
+    resetStopwatch();
+    startStopwatch();
+}
+
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
