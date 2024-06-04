@@ -25,8 +25,16 @@
         </div>
         <hr> <!-- Separator after stopwatch reset button -->
         <h2>Countdowns</h2>
+        <div id="short-timers" class="button-grid">
+            <button onclick="addPresetTimer('30 Seconds', '00:00:30')">30 Seconds</button>
+            <button onclick="addPresetTimer('1 Minute', '00:01:00')">1 Minute</button>
+            <button onclick="addPresetTimer('1:30', '00:01:30')">1:30</button>
+            <button onclick="addPresetTimer('2 Minutes', '00:02:00')">2 Minutes</button>
+            <button onclick="addPresetTimer('2:30', '00:02:30')">2:30</button>
+            <button onclick="addPresetTimer('3 Minutes', '00:03:00')">3 Minutes</button>
+        </div>
         <button id="add-timer" onclick="showAddTimerModal()">Add Custom Countdown</button>
-        <h3>Weekday Shows</h3>
+        <h3>Weekday Show Presets</h3>
         <div id="weekday-buttons" class="button-grid">
             <button onclick="addPresetTimer('AM Show Start', '04:30:00')">AM Show<br>Start</button>
             <button onclick="addPresetTimer('AM Show End', '06:56:57')">AM Show<br>End</button>
@@ -43,7 +51,7 @@
             <button class="offset" onclick="addPresetTimer('10 PM Start', '21:59:50')">10 PM<br>Start</button>
             <button class="offset" onclick="addPresetTimer('10 PM End', '22:26:00')">10 PM<br>End</button>
         </div>
-        <h3>Saturday Shows</h3>
+        <h3>Saturday Show Presets</h3>
         <div id="saturday-buttons" class="button-grid">
             <button onclick="addPresetTimer('Saturday AM Start', '07:58:55')">SAT AM<br>Start</button>
             <button onclick="addPresetTimer('Saturday AM End', '09:57:27')">SAT AM<br>End</button>
@@ -54,7 +62,7 @@
             <button onclick="addPresetTimer('Saturday 10 PM Start', '21:59:50')">10 PM<br>Start</button>
             <button onclick="addPresetTimer('Saturday 10 PM End', '22:55:30')">10 PM<br>End</button>
         </div>
-        <h3>Sunday Shows</h3>
+        <h3>Sunday Show Presets</h3>
         <div id="sunday-buttons" class="button-grid">
             <button onclick="addPresetTimer('Sunday AM Start', '07:00:00')">SUN AM<br>Start</button>
             <button onclick="addPresetTimer('Sunday AM End', '07:57:51')">SUN AM<br>End</button>
