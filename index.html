@@ -9,17 +9,21 @@
 <body>
     <div id="app">
         <h1>Time Manager</h1>
+        <hr> <!-- Separator after Time Manager -->
         <div id="current-date"></div>
         <div id="current-time"></div>
+        <hr> <!-- Separator after current time -->
         <div id="stopwatch">
             <h2>Stopwatch</h2>
             <div id="stopwatch-display" class="timer-display large-font">00:00:00</div> <!-- Updated class to large-font -->
             <div class="button-container">
                 <button onclick="startStopwatch()">Start</button>
                 <button onclick="stopStopwatch()">Stop</button>
+                <button onclick="restartStopwatch()">Restart</button> <!-- Added Restart button -->
                 <button onclick="resetStopwatch()">Reset</button>
             </div>
         </div>
+        <hr> <!-- Separator after stopwatch reset button -->
         <h2>Countdowns</h2>
         <button id="add-timer" onclick="showAddTimerModal()">Add Custom Countdown</button>
         <h3>Weekday Shows</h3>
@@ -59,6 +63,7 @@
             <button class="offset" onclick="addPresetTimer('Sunday 10 PM Start', '21:59:50')">10 PM<br>Start</button>
             <button class="offset" onclick="addPresetTimer('Sunday 10 PM End', '23:00:00')">10 PM<br>End</button>
         </div>
+        <hr> <!-- Separator after Sunday 10pm start/end buttons -->
         <div id="extra-timers" class="center-timers"></div>
     </div>
 
