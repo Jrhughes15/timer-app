@@ -88,7 +88,7 @@ h3 {
 }
 
 #short-timers.button-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .button-grid .offset {
@@ -97,9 +97,11 @@ h3 {
 
 #add-timer {
     margin-top: 20px;
-    width: calc(100% - 20px);
+    width: calc(4 * 120px + 3 * 10px); /* Adjust this width to match the width of the grid */
     height: 70px;
     font-size: 1.2em;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #extra-timers {
